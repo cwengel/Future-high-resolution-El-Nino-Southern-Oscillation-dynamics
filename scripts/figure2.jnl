@@ -1,0 +1,264 @@
+define symbol print=yes
+
+!PD
+use "SST.mon.0061-0140.1x1.pd.nc"
+use "SST.mon.0061-0140.1x1.detrend.ymonmean.timstd.pd.nc"
+use "SST.day.0061-0140.01x01.5d.indo_pac_eq.detrend.highpass_70day.timstd.pd.nc"
+use "SST.mon.0061-0140.1x1.detrend.a.timstd.pd.nc"
+
+!2x
+use "SST.mon.0091-0170.1x1.2x.nc"
+use "SST.mon.0091-0170.1x1.detrend.ymonmean.timstd.2x.nc"
+use "SST.day.0091-0170.01x01.5d.indo_pac_eq.detrend.highpass_70day.timstd.2x.nc"
+use "SST.mon.0091-0170.1x1.detrend.a.timstd.2x.nc"
+
+!4x
+use "SST.mon.0091-0170.1x1.4x.nc"
+use "SST.mon.0091-0170.1x1.detrend.ymonmean.timstd.4x.nc"
+use "SST.day.0091-0170.01x01.5d.indo_pac_eq.detrend.highpass_70day.timstd.4x.nc"
+use "SST.mon.0091-0170.1x1.detrend.a.timstd.4x.nc"
+
+use f_test_signif_fig1.nc
+
+let dif_2x = sst[d=5,l=1:960@ave]-sst[d=1,l=1:960@ave]
+let dif_2x_regmsub = dif_2x-dif_2x[x=30E:80W@ave,y=30S:30N@ave]
+
+let dif_4x = sst[d=9,l=1:960@ave]-sst[d=1,l=1:960@ave]
+let dif_4x_regmsub = dif_4x-dif_4x[x=30E:80W@ave,y=30S:30N@ave]
+
+!calc. percent
+let perc_ac_2x = (SST_QUADR_DETR[d=6,x=180E:80W@ave,y=1.5S:1.5N@ave,l=1:1@ave]-SST_QUADR_DETR[d=2,x=180E:80W@ave,y=1.5S:1.5N@ave,l=1:1@ave])/SST_QUADR_DETR[d=2,x=180E:80W@ave,y=1.5S:1.5N@ave,l=1:1@ave]
+let perc_ac_4x = (SST_QUADR_DETR[d=10,x=180E:80W@ave,y=1.5S:1.5N@ave,l=1:1@ave]-SST_QUADR_DETR[d=2,x=180E:80W@ave,y=1.5S:1.5N@ave,l=1:1@ave])/SST_QUADR_DETR[d=2,x=180E:80W@ave,y=1.5S:1.5N@ave,l=1:1@ave]
+
+let perc_tiw_2x = (SST_QUADR_DETR[d=7,x=180E:100W@ave,y=5S:5N@ave,l=1:1@ave]-SST_QUADR_DETR[d=3,x=180E:100W@ave,y=5S:5N@ave,l=1:1@ave])/SST_QUADR_DETR[d=3,x=180E:100W@ave,y=5S:5N@ave,l=1:1@ave]
+let perc_tiw_4x = (SST_QUADR_DETR[d=11,x=180E:100W@ave,y=5S:5N@ave,l=1:1@ave]-SST_QUADR_DETR[d=3,x=180E:100W@ave,y=5S:5N@ave,l=1:1@ave])/SST_QUADR_DETR[d=3,x=180E:100W@ave,y=5S:5N@ave,l=1:1@ave]
+
+let perc_enso_2x = (SST_QUADR_DETR[d=8,x=180E:80W@ave,y=5S:5N@ave,l=1:1@ave]-SST_QUADR_DETR[d=4,x=180E:80W@ave,y=5S:5N@ave,l=1:1@ave])/SST_QUADR_DETR[d=4,x=180E:80W@ave,y=5S:5N@ave,l=1:1@ave]
+let perc_enso_4x = (SST_QUADR_DETR[d=12,x=180E:80W@ave,y=5S:5N@ave,l=1:1@ave]-SST_QUADR_DETR[d=4,x=180E:80W@ave,y=5S:5N@ave,l=1:1@ave])/SST_QUADR_DETR[d=4,x=180E:80W@ave,y=5S:5N@ave,l=1:1@ave]
+
+let perc_iod_2x = (SST_QUADR_DETR[d=8,x=80E:110E@ave,y=10S:2.5N@ave,l=1:1@ave]-SST_QUADR_DETR[d=4,x=80E:110E@ave,y=10S:2.5N@ave,l=1:1@ave])/SST_QUADR_DETR[d=4,x=80E:110E@ave,y=10S:2.5N@ave,l=1:1@ave]
+let perc_iod_4x = (SST_QUADR_DETR[d=12,x=80E:110E@ave,y=10S:2.5N@ave,l=1:1@ave]-SST_QUADR_DETR[d=4,x=80E:110E@ave,y=10S:2.5N@ave,l=1:1@ave])/SST_QUADR_DETR[d=4,x=80E:110E@ave,y=10S:2.5N@ave,l=1:1@ave]
+
+SET MODE LINECOLORS:10
+PPL COLOR,7,40,40,40 ! gray
+PPL COLOR,8,45,45,45 ! grey (PD)
+PPL COLOR,9,60,80,100 ! blue (2x)
+PPL COLOR,10,100,40,10 ! orange (4x)
+
+go new_page.jnl 3 4
+
+set wind 1
+define symbol filename=figure1
+if ($print) then
+  set mod meta
+endif
+set wind/asp=0.7
+
+!!Background state
+!PD
+set viewp 1
+go margins 0.4 0.65 0.77 0.4
+fill/nok/nol/vlim=30S:30N/set/lev=(16,35,1)/pal=cmocean_thermal sst[d=1,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,4,,,,,,
+ppl cross,1
+ppl fill
+!cont/ov/nol/lev=(28,28,1)/set sst[d=1,l=@ave,x=30E:20E]
+!ppl CONSET 0.12,0,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.82,,,0.18 @c011(a) SST Mean State: @c018PD
+
+!2x
+set viewp 2
+go margins 0.4 0.65 0.5 0.7
+fill/nok/nol/vlim=30S:30N/set/lev=(16,35,1)/pal=cmocean_thermal sst[d=5,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,4,,,,,,
+ppl cross,1
+ppl fill
+cont/ov/nol/lev=(-3,3,0.3)del(0)/set/col=11 dif_2x_regmsub
+ppl CONSET 0.12,2,,,,,,
+ppl contour/ov
+!cont/ov/nol/lev=(28,28,1)/set sst[d=5,l=@ave,x=30E:20E]
+!ppl CONSET 0.12,0,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.82,,,0.18 @c011(b) @c0192xCO_2
+
+!4x
+set viewp 3
+go margins 0.4 0.65 0.2 1
+fill/nol/vlim=30S:30N/set/lev=(16,35,1)/pal=cmocean_thermal sst[d=9,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,2,,,,,,
+ppl cross,1
+ppl fill
+cont/ov/nol/lev=(-3,3,0.3)del(0)/set/col=11 dif_4x_regmsub
+ppl CONSET 0.12,2,,,,,,
+ppl contour/ov
+!cont/ov/nol/lev=(28,28,1)/set sst[d=9,l=@ave,x=30E:20E]
+!ppl CONSET 0.12,0,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.82,,,0.18 @c011(c) @c0204xCO_2
+label/nouser 5.75,2.82,,,0.18 @c001 (^oC)
+
+!!Seasonal Cycle
+!PD
+set viewp 10
+go margins 0.6 0.45 0.77 0.4
+fill/nok/nol/vlim=10S:10N:2.5/set/lev=(0,2.0,0.2)/pal=blue_darkred SST_QUADR_DETR[d=2,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,,,,,,,
+ppl cross,1
+ppl fill
+!cont/ov/nol/lev=(0,2.0,0.1)/set sst[d=2]
+!ppl CONSET 0.12,1,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.85,,,0.18 @c011(j) SST Seasonal Var.: @c018PD
+
+!2x
+set viewp 11
+go margins 0.6 0.45 0.5 0.7
+fill/nok/nol/vlim=10S:10N:2.5/set/lev=(0,2.0,0.2)/pal=blue_darkred SST_QUADR_DETR[d=6,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,,,,,,,
+ppl cross,1
+ppl fill
+sha/over/palette=gray/pattern=tiny_squares/nol/lev=(0,0,1)/nok SIGNIF_AC_2X[gxy=SST_QUADR_DETR[d=6]@asn,d=13]
+!cont/ov/nol/lev=(0,2.0,0.1)/set sst[d=2]
+!ppl CONSET 0.12,1,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.85,,,0.18 @c011(k) @c0192xCO_2
+
+!4x
+set viewp 12
+go margins 0.6 0.45 0.2 1
+fill/nol/vlim=10S:10N:2.5/set/lev=(0,2.0,0.2)/pal=blue_darkred SST_QUADR_DETR[d=10,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,2,,,,,,
+ppl cross,1
+ppl fill
+sha/over/palette=gray/pattern=tiny_squares/nol/lev=(0,0,1)/nok SIGNIF_AC_4X[gxy=SST_QUADR_DETR[d=10]@asn,d=13]
+!cont/ov/nol/lev=(0,2.0,0.1)/set sst[d=2]
+!ppl CONSET 0.12,1,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0.0,2.85,,,0.18 @c011(l) @c0204xCO_2
+label/nouser 5.75,2.85,,,0.18 @c001 (^oC)
+
+!!TIWs
+!PD
+set viewp 7
+go margins 0.55 0.5 0.77 0.4
+sha/nol/nok/vlim=10S:10N:2.5/set/lev=(0,0.55,0.05)/pal=blue_darkred SST_QUADR_DETR[d=3,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,4,,,,,,
+ppl cross,1
+ppl shade
+!cont/ov/nol/lev=(0,2.2,0.05)/set sst[d=3]
+!ppl CONSET 0.12,1,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.85,,,0.18 @c011(g) TIW Var.: @c018PD
+
+!2x
+set viewp 8
+go margins 0.55 0.5 0.5 0.7
+sha/nol/nok/vlim=10S:10N:2.5/set/lev=(0,0.55,0.05)/pal=blue_darkred SST_QUADR_DETR[d=7,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,4,,,,,,
+ppl cross,1
+ppl shade
+sha/over/palette=gray/pattern=tiny_squares/nol/lev=(0,0,1)/nok SIGNIF_TIW_2X[gxy=SST_QUADR_DETR[d=7]@asn,d=13]
+!cont/ov/nol/lev=(0,2.2,0.05)/set sst[d=3]
+!ppl CONSET 0.12,1,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.85,,,0.18 @c011(h) @c0192xCO_2
+
+!4x
+set viewp 9
+go margins 0.55 0.5 0.2 1
+sha/nol/vlim=10S:10N:2.5/set/lev=(0,0.55,0.05)/pal=blue_darkred SST_QUADR_DETR[d=11,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,2,,,,,,
+ppl cross,1
+ppl shade
+sha/over/palette=gray/pattern=tiny_squares/nol/lev=(0,0,1)/nok SIGNIF_TIW_4X[gxy=SST_QUADR_DETR[d=11]@asn,d=13]
+!cont/ov/nol/lev=(0,2.2,0.05)/set sst[d=3]
+!ppl CONSET 0.12,1,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.85,,,0.18 @c011(i) @c0204xCO_2
+label/nouser 5.75,2.85,,,0.18 @c001 (^oC)
+
+!!ENSO/IOD
+!PD
+set viewp 4
+go margins 0.5 0.55 0.77 0.4
+fill/nok/nol/vlim=10S:10N:2.5/set/lev=(0,1.1,0.1)/pal=blue_darkred SST_QUADR_DETR[d=4,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,,,,,,,
+ppl cross,1
+ppl fill
+!cont/ov/nol/lev=(1,1,1)/set sst[d=4,l=@ave,x=30E:20E]
+!ppl CONSET 0.12,0,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.85,,,0.18 @c011(d) ENSO Var.: @c018PD
+go box 180,280,-5,5,7
+
+!2x
+set viewp 5
+go margins 0.5 0.55 0.5 0.7
+fill/nok/nol/vlim=10S:10N:2.5/set/lev=(0,1.1,0.1)/pal=blue_darkred SST_QUADR_DETR[d=8,l=@ave,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,,,,,,,
+ppl cross,1
+ppl fill
+sha/over/palette=gray/pattern=tiny_squares/nol/lev=(0,0,1)/nok SIGNIF_ENSO_2X[gxy=SST_QUADR_DETR[d=8]@asn,d=13]
+!cont/ov/nol/lev=(1,1,1)/set sst[d=8,l=@ave,x=30E:20E]
+!ppl CONSET 0.12,0,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.85,,,0.18 @c011(e) @c0192xCO_2
+
+!4x
+set viewp 6
+go margins 0.5 0.55 0.2 1
+fill/nol/vlim=10S:10N:2.5/set/lev=(0,1.1,0.1)/pal=blue_darkred SST_QUADR_DETR[d=12,x=30E:20E]
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,2,,,,,,
+ppl cross,1
+ppl fill
+sha/over/palette=gray/pattern=tiny_squares/nol/lev=(0,0,1)/nok SIGNIF_ENSO_4X[gxy=SST_QUADR_DETR[d=12]@asn,d=13,l=@ave,x=30E:20E]
+!cont/ov/nol/lev=(1,1,1)/set sst[d=12,l=@ave,x=30E:20E]
+!ppl CONSET 0.12,0,,,,,,
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,2.85,,,0.18 @c011(f) @c0204xCO_2
+label/nouser 5.75,2.85,,,0.18 @c001 (^oC)
+
+if ($print) then
+  can mod meta
+  sp Fprint -o ($filename).ps -l cps -p portrait metafile.plt
+  sp sed -e "s/3000 div setlinewidth}/800 div setlinewidth}/" ($filename).ps > ($filename).thick.ps
+  sp rm metafile* ($filename).ps
+  sp mv ($filename).thick.ps ($filename).ps
+endif

@@ -1,0 +1,117 @@
+set mem/size=1000
+
+define symbol print=no
+
+use SST.day.0071-0073.01x01.nc
+use EKE.day.0071-0073.01x01.nc
+use "/pf/m/m300845/_work_pc/ENSO/submission2/BJ/BJ_aleph/PD/all_m/SST.mon.1x1.east.fldmean.a.all_m.nc"
+use "HFC.VEL_TIW.T_TIW.monmean.a.nc"
+
+SET MODE LINECOLORS:10
+PPL COLOR,7,40,40,40 ! gray
+PPL COLOR,8,45,45,45 ! grey (PD)
+PPL COLOR,9,60,80,100 ! blue (2x)
+PPL COLOR,10,100,40,10 ! orange (4x)
+
+go new_page.jnl 2 3
+
+set wind 1
+define symbol filename=tiws
+if ($print) then
+  set mod meta
+endif
+set wind/asp=1
+
+set viewp 1
+go margins 0.7 0.7 1 0.7
+fill/nol/nok/pal=cmocean_thermal/set/hlim=180E:75W/vlim=15S:15N/lev=(16,33,0.5) sst[d=1,t=15-DEC-0071]
+ppl axlint,2,
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,,,,,,,
+ppl axlabp,-1,-1
+ppl axset,1,1,1,1
+ppl cross,1
+ppl fill
+go fland
+go land
+label/nouser 0,3.8,,,0.18 @c011(a) SST: El Nino
+label/nouser 1.9,3.93,,,0.12 @c001@AS~
+
+set viewp 2
+go margins 0.7 0.7 0.54 1.16
+fill/nol/pal=cmocean_thermal/set/hlim=180E:75W/vlim=15S:15N/lev=(16,33,0.5) sst[d=1,t=15-SEP-0072]
+ppl axlint,2,
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,,,,,,,
+ppl axlabp,-1,-1
+ppl axset,1,1,1,1
+ppl cross,1
+ppl fill
+go fland
+go land
+label/nouser 0,3.8,,,0.18 @c011(b) SST: La Nina
+label/nouser 1.95,3.93,,,0.12 @c001@AS~
+label/nouser 5.85,3.75,,,0.16 @c001(^oC)
+
+set viewp 3
+go margins 0.7 0.7 1 0.7
+sha/nol/nok/pal=viridis/set/hlim=180E:75W/vlim=15S:15N/lev=(0,0.1,0.02)(0.1,0.3,0.025)(0.3,0.7,0.1) uvel[d=2,t=15-DEC-0071]*1e-4
+ppl axlint,2,
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,2,,,,,,
+ppl axlabp,-1,-1
+ppl axset,1,1,1,1
+ppl cross,1
+ppl shade
+go fland
+go land
+label/nouser 0,3.8,,,0.18 @c011(c) EKE: El Nino
+label/nouser 1.90,3.93,,,0.12 @c001@AS~
+
+set viewp 4
+go margins 0.7 0.7 0.54 1.16
+sha/nol/pal=viridis/set/hlim=180E:75W/vlim=15S:15N/lev=(0,0.1,0.02)(0.1,0.3,0.025)(0.3,0.7,0.1) uvel[d=2,t=15-SEP-0072]*1e-4
+ppl axlint,2,
+ppl axlsze,0.15,0.15
+ppl shakey ,,0.15,2,,,,,,
+ppl axlabp,-1,-1
+ppl axset,1,1,1,1
+ppl cross,1
+ppl shade
+go fland
+go land
+label/nouser 0,3.8,,,0.18 @c011(d) EKE: La Nina
+label/nouser 1.98,3.93,,,0.12 @c001@AS~
+label/nouser 5.7,3.75,,,0.16 @c001(m^2s^-^2)
+
+set viewp 5
+go margins 1 1 3 -4
+plot/set/nol/vlim=-2.5:3.5/nol/line=17 SST[t=15-JAN-0071:15-DEC-0073,d=3]
+ppl axlsze,,0.14
+ppl txlsze,,0.14
+ppl txlint,2,
+ppl cross,1,
+ppl YFOR,(i2)
+ppl plot
+!plot/ov/line=17/dash/nol HFC_VEL_TIW_T_TIW[t=15-JAN-0071:15-DEC-0073,d=4]*1e1
+plot/ov/line=20/nol HFC_VEL_TIW_T_TIW[t=15-JAN-0071:15-DEC-0073@iin,d=4]/(365/12*24*60*60)
+label/nouser -0.1,3.2,,,0.18 @c011(e) El Nino - La Nina transition: SSTA and TIW heating/cooling
+label/nouser 1.08,3.33,,,0.12 @c001@AS~
+label/nouser 2.60,3.33,,,0.12 @c001@AS~
+label/nouser 2.7,-0.8,,,0.18 @c001 Time (model years)
+label/nouser -0.6,1.2,,90,0.18 @c001 ^oC
+!label/nouser -0.6,0.1,,90,0.18 @c001 K or (0.1K mon^-^1)
+
+label/nouser 4.3,2.6,,,0.16 @c017 --@c008 SSTA
+label/nouser 4.4,2.6,,,0.16 @c017 -
+!label/nouser 5.3,2.5,,,0.16 @c002 -- @IM58@SRHFC_T_I_W dt
+label/nouser 4.3,2.2,,,0.16 @c012 -- @c002TIW heating/cooling
+label/nouser 4.4,2.2,,,0.16 @c012 -
+
+if ($print) then
+  can mod meta
+  sp Fprint -o ($filename).ps -l cps -p portrait metafile.plt
+  sp sed -e "s/3000 div setlinewidth}/900 div setlinewidth}/" ($filename).ps > ($filename).thick.ps
+  sp rm metafile* ($filename).ps
+  sp mv ($filename).thick.ps ($filename).ps
+

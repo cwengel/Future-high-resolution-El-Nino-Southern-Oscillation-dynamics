@@ -1,0 +1,4 @@
+1. ./pre_post_BJ.csh
+2. ./BJ1.csh
+3. ./running_mean.sh
+4. matlab BJ2.m

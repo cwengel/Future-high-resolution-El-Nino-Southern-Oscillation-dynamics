@@ -1,0 +1,311 @@
+set mem/size=2000
+
+define symbol print=yes
+
+use "PD/regr_fields_PD.nc"
+use "2x/regr_fields_2x.nc"
+use "4x/regr_fields_4x.nc"
+
+use "PD/UVEL.mon.1x1.detrend.a.nc"
+use "PD/LHFLX.mon.1x1.detrend.a.nc"
+use "PD/TEMP.mon.1x1.detrend.a.mermean.nc"
+
+use "PD/WVEL.mon.1x1.copy.nc"
+use "2x/WVEL.mon.1x1.copy.nc"
+use "4x/WVEL.mon.1x1.copy.nc"
+
+use "PD/HMXL.mon.0061-0140.1x1.east.ymonmean.nc"
+use "2x/HMXL.mon.0091-0170.1x1.ymonmean.copy.nc"
+use "4x/HMXL.mon.0091-0170.1x1.ymonmean.copy.nc"
+
+use "PD/thermocline.mon.1x1.detrend.nc"
+use "2x/thermocline.mon.1x1.detrend.nc"
+use "4x/thermocline.mon.1x1.detrend.nc"
+
+let zlev=z[gz=uvel[d=4]]*1e-2
+def ax/z/units="meters" zax=zlev
+
+let REGR_U_TAUX_MERMEAN_PD_GR = REGR_U_TAUX_MERMEAN_PD[d=1,gx=UVEL[d=4]@asn,gz=zax@asn]*1e-2
+let REGR_U_TAUX_MERMEAN_2x_GR = REGR_U_TAUX_MERMEAN_2x[d=2,gx=UVEL[d=4]@asn,gz=zax@asn]*1e-2
+let REGR_U_TAUX_MERMEAN_4x_GR = REGR_U_TAUX_MERMEAN_4x[d=3,gx=UVEL[d=4]@asn,gz=zax@asn]*1e-2
+
+let REGR_U_TAUX_ZONMEAN_PD_GR = REGR_U_TAUX_ZONMEAN_PD[d=1,gy=UVEL[d=4]@asn,gz=zax@asn]*1e-2
+let REGR_U_TAUX_ZONMEAN_2x_GR = REGR_U_TAUX_ZONMEAN_2x[d=2,gy=UVEL[d=4]@asn,gz=zax@asn]*1e-2
+let REGR_U_TAUX_ZONMEAN_4x_GR = REGR_U_TAUX_ZONMEAN_4x[d=3,gy=UVEL[d=4]@asn,gz=zax@asn]*1e-2
+
+let REGR_W_TAUX_MERMEAN_PD_GR = REGR_W_TAUX_MERMEAN_PD[d=1,gx=UVEL[d=4]@asn,gz=zax@asn]*1e-2*1e4*-1
+let REGR_W_TAUX_MERMEAN_2x_GR = REGR_W_TAUX_MERMEAN_2x[d=2,gx=UVEL[d=4]@asn,gz=zax@asn]*1e-2*1e4*-1
+let REGR_W_TAUX_MERMEAN_4x_GR = REGR_W_TAUX_MERMEAN_4x[d=3,gx=UVEL[d=4]@asn,gz=zax@asn]*1e-2*1e4*-1
+
+let REGR_W_TAUX_ZONMEAN_PD_GR = REGR_W_TAUX_ZONMEAN_PD[d=1,gy=UVEL[d=4]@asn,gz=zax@asn]*1e-2*1e4*-1
+let REGR_W_TAUX_ZONMEAN_2x_GR = REGR_W_TAUX_ZONMEAN_2x[d=2,gy=UVEL[d=4]@asn,gz=zax@asn]*1e-2*1e4*-1
+let REGR_W_TAUX_ZONMEAN_4x_GR = REGR_W_TAUX_ZONMEAN_4x[d=3,gy=UVEL[d=4]@asn,gz=zax@asn]*1e-2*1e4*-1
+
+let LH_PD_GR = LH_PD[d=1,gxy=LHFLX[d=5]@asn]
+let LH_2x_GR = LH_2x[d=2,gxy=LHFLX[d=5]@asn]
+let LH_4x_GR = LH_4x[d=3,gxy=LHFLX[d=5]@asn]
+
+let REGR_TSUB_H_MERMEAN_PD_GR = REGR_TSUB_H_MERMEAN_PD[d=1,gx=TEMP_GR[d=6]@asn,gz=zax@asn]*1e4
+let REGR_TSUB_H_MERMEAN_2x_GR = REGR_TSUB_H_MERMEAN_2x[d=2,gx=TEMP_GR[d=6]@asn,gz=zax@asn]*1e4
+let REGR_TSUB_H_MERMEAN_4x_GR = REGR_TSUB_H_MERMEAN_4x[d=3,gx=TEMP_GR[d=6]@asn,gz=zax@asn]*1e4
+
+let REGR_H_TAUX_PD_GR = REGR_H_TAUX_PD[d=1,gxy=UVEL[d=4]@asn]*1e-2*1e-2
+let REGR_H_TAUX_2x_GR = REGR_H_TAUX_2x[d=2,gxy=UVEL[d=4]@asn]*1e-2*1e-2
+let REGR_H_TAUX_4x_GR = REGR_H_TAUX_4x[d=3,gxy=UVEL[d=4]@asn]*1e-2*1e-2
+
+let TAUX_PD_GR = TAUX_PD[d=1,gxy=LHFLX[d=5]@asn]*1e2
+let TAUX_2x_GR = TAUX_2x[d=2,gxy=LHFLX[d=5]@asn]*1e2
+let TAUX_4x_GR = TAUX_4x[d=3,gxy=LHFLX[d=5]@asn]*1e2
+
+let WVEL_PD = WVEL[d=7,gz=zax@asn,j=@ave,l=@ave]*1e-2*1e6
+let WVEL_2x = WVEL[d=8,gz=zax@asn,j=@ave,l=@ave]*1e-2*1e6
+let WVEL_4x = WVEL[d=9,gz=zax@asn,j=@ave,l=@ave]*1e-2*1e6
+
+SET MODE LINECOLORS:10
+PPL COLOR,7,40,40,40 ! gray
+PPL COLOR,8,45,45,45 ! grey (PD)
+PPL COLOR,9,60,80,100 ! blue (2x)
+PPL COLOR,10,100,40,10 ! orange (4x)
+
+go new_page.jnl 3 7
+
+set wind 1
+define symbol filename=regr_fields
+if ($print) then
+  set mod meta
+endif
+set wind/asp=1.5
+
+
+!miua
+set viewp 2
+go margins 0.8 0.6 1.8 0.2
+fill/nol/nok/pal=blue_darkred.spk/lev=(-18,18,3)/set/hlim=120E:80W/vlim=15S:15N:5 TAUX_PD_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+go fland; go land
+label/nouser -0.9,2.35,,,0.18 @c011(b) TAUX regr. SST: @c018PD @c011(ZAF, TF, EF)
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+label/nouser -0.8,0.4,,90,0.18 @c001 Latitude
+
+set viewp 3
+go margins 0.8 0.6 1 1
+fill/nol/pal=blue_darkred.spk/lev=(-18,18,3)/set/hlim=120E:80W/vlim=15S:15N:5 TAUX_4x_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+cont/ov/nol/lev=(-18,18,3)del(0)/set TAUX_4x_GR-TAUX_PD_GR
+ppl CONSET 0.16,,,,,,,1
+ppl contour/ov
+go fland; go land
+label/nouser 0,2.35,,,0.18 @c011(c) @c0204XCO_2
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+
+!BEITA_U ZONMEAN
+set viewp 5
+go margins 0.7 0.7 1.8 0.2
+fill/nok/nol/pal=blue_darkred.spk/lev=(-1.8,1.8,0.3)/set/hlim=5S:5N:2.5/vlim=200:0:50 REGR_U_TAUX_ZONMEAN_PD_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+!plot/ov/nol/line=1 thermocline[d=13,x=180E:80W@ave,l=@ave]*1e-2
+plot/ov/nol/line=7/dash HMXL[d=10,x=180E:80W@ave,l=@ave]*1e-2
+label/nouser 0,2.35,,,0.18 @c011(d) U regr. to TAUX: @c018PD @c011(ZAF)
+label/nouser 1.1,-0.65,,,0.18 @c001 Latitude
+label/nouser -0.74,0.25,,90,0.18 @c001 Depth (m)
+
+set viewp 6
+go margins 0.7 0.7 1 1
+fill/nol/pal=blue_darkred.spk/lev=(-1.8,1.8,0.3)/set/hlim=5S:5N:2.5/vlim=200:0:50 REGR_U_TAUX_ZONMEAN_4x_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+cont/ov/nol/lev=(-1.8,1.8,0.3)del(0)/set REGR_U_TAUX_ZONMEAN_4x_GR-REGR_U_TAUX_ZONMEAN_PD_GR
+ppl CONSET 0.16,,,,,,,1
+ppl contour/ov
+!plot/ov/nol/line=1 thermocline[d=15,x=180E:80W@ave,l=@ave]*1e-2
+plot/ov/nol/line=7/dash HMXL[d=12,x=180E:80W@ave,l=@ave]*1e-2
+label/nouser 0,2.35,,,0.18 @c011(e) @c0204xCO_2
+label/nouser 1.1,-0.65,,,0.18 @c001 Latitude
+
+!BEITA_W ZONMEAN
+set viewp 8
+go margins 0.7 0.7 1.8 0.2
+fill/nok/nol/pal=blue_darkred.spk/lev=(-0.48,0.48,0.08)/set/hlim=5S:5N:2.5/vlim=200:0:50 REGR_W_TAUX_ZONMEAN_PD_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+!plot/ov/nol/line=1 thermocline[d=13,x=180E:80W@ave,l=@ave]*1e-2
+plot/ov/nol/line=7/dash HMXL[d=10,x=180E:80W@ave,l=@ave]*1e-2
+label/nouser 0,2.35,,,0.18 @c011(f) W regr. to TAUX: @c018PD @c011(EF)
+label/nouser 1.1,-0.65,,,0.18 @c001 Latitude
+label/nouser -0.74,0.25,,90,0.18 @c001 Depth (m)
+
+set viewp 9
+go margins 0.7 0.7 1 1
+fill/nol/pal=blue_darkred.spk/lev=(-0.48,0.48,0.08)/set/hlim=5S:5N:2.5/vlim=200:0:50 REGR_W_TAUX_ZONMEAN_4x_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+cont/ov/nol/lev=(-0.48,0.48,0.08)del(0)/set REGR_W_TAUX_ZONMEAN_4x_GR-REGR_W_TAUX_ZONMEAN_PD_GR
+ppl CONSET 0.16,,,,,,,1
+ppl contour/ov
+!plot/ov/nol/line=1 thermocline[d=15,x=180E:80W@ave,l=@ave]*1e-2
+plot/ov/nol/line=7/dash HMXL[d=12,x=180E:80W@ave,l=@ave]*1e-2
+label/nouser 0,2.35,,,0.18 @c011(g) @c0204xCO_2
+label/nouser 1.1,-0.65,,,0.18 @c001 Latitude
+
+!A_H MERMEAN
+set viewp 11
+go margins 0.7 0.7 1.8 0.2
+fill/nok/nol/pal=blue_darkred.spk/lev=(-30,30,5)/set/hlim=180E:80W/vlim=200:0:50 REGR_TSUB_H_MERMEAN_PD_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+!plot/ov/nol/line=7 thermocline[d=13,y=5S:5N@ave,l=@ave]*1e-2
+plot/ov/nol/line=7/dash HMXL[d=10,y=5S:5N@ave,l=@ave]*1e-2
+label/nouser 0,2.35,,,0.18 @c011(h) TSUB regr. to H: @c018PD @c011(TF)
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+label/nouser -0.74,0.25,,90,0.18 @c001 Depth (m)
+
+set viewp 12
+go margins 0.7 0.7 1 1
+fill/nol/pal=blue_darkred.spk/lev=(-30,30,5)/set/hlim=180E:80W/vlim=200:0:50 REGR_TSUB_H_MERMEAN_4x_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+cont/ov/nol/lev=(-30,30,5)del(0)/set REGR_TSUB_H_MERMEAN_4x_GR-REGR_TSUB_H_MERMEAN_PD_GR
+ppl CONSET 0.16,,,,,,,1
+ppl contour/ov
+!plot/ov/nol/line=7 thermocline[d=15,y=5S:5N@ave,l=@ave]*1e-2
+plot/ov/nol/line=7/dash HMXL[d=12,y=5S:5N@ave,l=@ave]*1e-2
+label/nouser 0,2.35,,,0.18 @c011(i) @c0204xCO_2
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+
+!beita_h
+set viewp 14
+go margins 0.7 0.7 1.8 0.2
+fill/nok/nol/pal=blue_darkred.spk/lev=(-inf)(-3,3,0.5)(inf)/set/hlim=120E:80W:20/vlim=5S:5N REGR_H_TAUX_PD_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+!ppl YFOR (i5, "^o")
+ppl fill
+go fland; go land
+label/nouser 0,2.35,,,0.18 @c011(j) H regr. TAUX: @c018PD @c011(TF)
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+label/nouser -0.8,0.4,,90,0.18 @c001 Latitude
+
+set viewp 15
+go margins 0.7 0.7 1 1
+fill/nol/pal=blue_darkred.spk/lev=(-inf)(-3,3,0.5)(inf)/set/hlim=120E:80W:20/vlim=5S:5N REGR_H_TAUX_4X_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+cont/ov/nol/lev=(-5,5,1)del(0)/set REGR_H_TAUX_4X_GR-REGR_H_TAUX_PD_GR
+ppl CONSET 0.16,,,,,,,1
+ppl contour/ov
+go fland; go land
+label/nouser 0,2.35,,,0.18 @c011(k) @c0204xCO_2 
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+
+!LH
+set viewp 17
+go margins 0.7 0.7 1.8 0.2
+fill/nok/nol/pal=blue_darkred.spk/lev=(-30,30,5)/set/hlim=180E:80W/vlim=15S:15N:5 LH_PD_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+go fland; go land
+label/nouser 0,2.35,,,0.18 @c011(l) LH: @c018PD @c011(TD)
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+label/nouser -0.8,0.4,,90,0.18 @c001 Latitude
+
+set viewp 18
+go margins 0.7 0.7 1 1
+fill/nol/pal=blue_darkred.spk/lev=(-30,30,5)/set/hlim=180E:80W/vlim=15S:15N:5 LH_4x_GR
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+cont/ov/nol/lev=(-30,30,5)del(0)/set LH_4x_GR-LH_PD_GR
+ppl CONSET 0.16,,,,,,,1
+ppl contour/ov
+go fland; go land
+label/nouser 0,2.35,,,0.18 @c011(m) @c0204xCO_2
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+
+!mean W
+set viewp 20
+go margins 0.6 0.8 1.8 0.2
+fill/nok/nol/pal=blue_darkred.spk/lev=(-inf)(-5,5,1)(inf)/set/hlim=180E:80W/vlim=200:0:50 WVEL_PD
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+!plot/ov/nol/line=1 thermocline[d=13,y=5S:5N@ave,l=@ave]*1e-2
+plot/ov/nol/line=7/dash HMXL[d=10,y=5S:5N@ave,l=@ave]*1e-2
+label/nouser 0,2.35,,,0.18 @c011(n) Mean upwelling: @c018PD @c011(DD)
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+label/nouser -0.74,0.25,,90,0.18 @c001 Depth (m)
+
+set viewp 21
+go margins 0.6 0.8 1 1
+fill/nol/pal=blue_darkred.spk/lev=(-inf)(-5,5,1)(inf)/set/hlim=180E:80W/vlim=200:0:50 WVEL_4x
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+cont/ov/nol/lev=(-5,5,1)del(0)/set WVEL_4x-WVEL_PD
+ppl CONSET 0.16,,,,,,,1
+ppl contour/ov
+!plot/ov/nol/line=1 thermocline[d=15,y=5S:5N@ave,l=@ave]*1e-2
+plot/ov/nol/line=7/dash HMXL[d=12,y=5S:5N@ave,l=@ave]*1e-2
+label/nouser 0,2.35,,,0.18 @c011(o) @c0204xCO_2
+label/nouser 1,-0.65,,,0.18 @c001 Longitude
+
+if ($print) then
+  can mod meta
+  sp Fprint -o ($filename).ps -l cps -p portrait metafile.plt
+  sp sed -e "s/3000 div setlinewidth}/900 div setlinewidth}/" ($filename).ps > ($filename).thick.ps
+  sp rm metafile* ($filename).ps
+  sp mv ($filename).thick.ps ($filename).ps
+endif

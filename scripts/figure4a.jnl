@@ -1,0 +1,209 @@
+define symbol print=yes
+
+use/order=tx "/pf/m/m300845/_work_pc/ENSO/submission2/BJ/BJ_aleph/PD/output_from_shscript/BJ_ind_mon.nc"
+use/order=tx "/pf/m/m300845/_work_pc/ENSO/submission2/BJ/BJ_aleph/2x/output_from_shscript/BJ_ind_mon.nc"
+use/order=tx "/pf/m/m300845/_work_pc/ENSO/submission2/BJ/BJ_aleph/4x/output_from_shscript/BJ_ind_mon.nc"
+
+use SST.mon.0061-0140.1x1.detrend.a.timstd.pd.nc
+use SST.mon.0091-0170.1x1.detrend.a.timstd.2x.nc
+use SST.mon.0091-0170.1x1.detrend.a.timstd.4x.nc
+
+use SST.day.0061-0140.01x01.5d.indo_pac_eq.detrend.highpass_70day.timstd.pd.nc
+use SST.day.0091-0170.01x01.5d.indo_pac_eq.detrend.highpass_70day.timstd.2x.nc
+use SST.day.0091-0170.01x01.5d.indo_pac_eq.detrend.highpass_70day.timstd.4x.nc
+
+!(a)
+let bj_pd_am = BJFB[i=7,l=@ave,d=1]
+let bj_pd_am_ci = BJFB_CI[i=7,l=@ave,d=1]
+let zaf_pd_am = BJFB[i=4,l=@ave,d=1]
+let zaf_pd_am_ci = BJFB_CI[i=4,l=@ave,d=1]
+let tf_pd_am = BJFB[i=5,l=@ave,d=1]
+let tf_pd_am_ci = BJFB_CI[i=5,l=@ave,d=1]
+let ef_pd_am = BJFB[i=6,l=@ave,d=1]
+let ef_pd_am_ci = BJFB_CI[i=6,l=@ave,d=1]
+let td_pd_am = BJFB[i=3,l=@ave,d=1]
+let td_pd_am_ci = BJFB_CI[i=3,l=@ave,d=1]
+let dd_pd_am = BJFB[i=2,l=@ave,d=1]
+let dd_pd_am_ci = BJFB_CI[i=2,l=@ave,d=1]
+let tiw_pd_am = BJFB[i=1,l=@ave,d=1]
+let tiw_pd_am_ci = BJFB_CI[i=1,l=@ave,d=1]
+
+let bj_2x_am = BJFB[i=7,l=@ave,d=2]
+let bj_2x_am_ci = BJFB_CI[i=7,l=@ave,d=2]
+let zaf_2x_am = BJFB[i=4,l=@ave,d=2]
+let zaf_2x_am_ci = BJFB_CI[i=4,l=@ave,d=2]
+let tf_2x_am = BJFB[i=5,l=@ave,d=2]
+let tf_2x_am_ci = BJFB_CI[i=5,l=@ave,d=2]
+let ef_2x_am = BJFB[i=6,l=@ave,d=2]
+let ef_2x_am_ci = BJFB_CI[i=6,l=@ave,d=2]
+let td_2x_am = BJFB[i=3,l=@ave,d=2]
+let td_2x_am_ci = BJFB_CI[i=3,l=@ave,d=2]
+let dd_2x_am = BJFB[i=2,l=@ave,d=2]
+let dd_2x_am_ci = BJFB_CI[i=2,l=@ave,d=2]
+let tiw_2x_am = BJFB[i=1,l=@ave,d=2]
+let tiw_2x_am_ci = BJFB_CI[i=1,l=@ave,d=2]
+
+let bj_4x_am = BJFB[i=7,l=@ave,d=3]
+let bj_4x_am_ci = BJFB_CI[i=7,l=@ave,d=3]
+let zaf_4x_am = BJFB[i=4,l=@ave,d=3]
+let zaf_4x_am_ci = BJFB_CI[i=4,l=@ave,d=3]
+let tf_4x_am = BJFB[i=5,l=@ave,d=3]
+let tf_4x_am_ci = BJFB_CI[i=5,l=@ave,d=3]
+let ef_4x_am = BJFB[i=6,l=@ave,d=3]
+let ef_4x_am_ci = BJFB_CI[i=6,l=@ave,d=3]
+let td_4x_am = BJFB[i=3,l=@ave,d=3]
+let td_4x_am_ci = BJFB_CI[i=3,l=@ave,d=3]
+let dd_4x_am = BJFB[i=2,l=@ave,d=3]
+let dd_4x_am_ci = BJFB_CI[i=2,l=@ave,d=3]
+let tiw_4x_am = BJFB[i=1,l=@ave,d=3]
+let tiw_4x_am_ci = BJFB_CI[i=1,l=@ave,d=3]
+
+let bj_pd = {`SST_QUADR_DETR[d=4,x=180E:80W@ave,y=5S:5N@ave]`,0,0,0,`bj_pd_am`,0,0,0,`zaf_pd_am`,0,0,0,`tf_pd_am`,0,0,0,`ef_pd_am`,0,0,0,`td_pd_am`,0,0,0,`dd_pd_am`,0,0,0,`tiw_pd_am`,0,0}
+let bj_2x = {0,`SST_QUADR_DETR[d=5,x=180E:80W@ave,y=5S:5N@ave]`,0,0,0,`bj_2x_am`,0,0,0,`zaf_2x_am`,0,0,0,`tf_2x_am`,0,0,0,`ef_2x_am`,0,0,0,`td_2x_am`,0,0,0,`dd_2x_am`,0,0,0,`tiw_2x_am`,0}
+let bj_4x = {0,0,`SST_QUADR_DETR[d=6,x=180E:80W@ave,y=5S:5N@ave]`,0,0,0,`bj_4x_am`,0,0,0,`zaf_4x_am`,0,0,0,`tf_4x_am`,0,0,0,`ef_4x_am`,0,0,0,`td_4x_am`,0,0,0,`dd_4x_am`,0,0,0,`tiw_4x_am`}
+
+let bj_pd_ci = {0,0,0,0,`bj_pd_am_ci`,0,0,0,`zaf_pd_am_ci`,0,0,0,`tf_pd_am_ci`,0,0,0,`ef_pd_am_ci`,0,0,0,`td_pd_am_ci`,0,0,0,`dd_pd_am_ci`,0,0,0,`tiw_pd_am_ci`,0,0}
+let bj_2x_ci = {0,0,0,0,0,`bj_2x_am_ci`,0,0,0,`zaf_2x_am_ci`,0,0,0,`tf_2x_am_ci`,0,0,0,`ef_2x_am_ci`,0,0,0,`td_2x_am_ci`,0,0,0,`dd_2x_am_ci`,0,0,0,`tiw_2x_am_ci`,0}
+let bj_4x_ci = {0,0,0,0,0,0,`bj_4x_am_ci`,0,0,0,`zaf_4x_am_ci`,0,0,0,`tf_4x_am_ci`,0,0,0,`ef_4x_am_ci`,0,0,0,`td_4x_am_ci`,0,0,0,`dd_4x_am_ci`,0,0,0,`tiw_4x_am_ci`}
+
+!(b)
+let miua_pd_am = MIUA[d=1,l=@ave]*1e2*1e-1
+let miua_pd_am_ci = MIUA_CI[l=@ave,d=1]*1e2*1e-1
+let beita_u_pd_am = BEITA_U[d=1,l=@ave]*1e1*1e-2
+let beita_u_pd_am_ci = BEITA_U_CI[d=1,l=@ave]*1e1*1e-2
+let zonal_sst_pd_am = ZOSST_GRAD[d=1,l=@ave]*1e9
+let beita_w_pd_am = BEITA_W[d=1,l=@ave]*1e1*1e-2*1e4
+let beita_w_pd_am_ci = BEITA_W_CI[d=1,l=@ave]*1e1*1e-2*1e4
+let thermocl_pd_am = BEITA_H[d=1,l=@ave]*1e-2*1e-2*1e1
+let thermocl_pd_am_ci = BEITA_H_CI[d=1,l=@ave]*1e-2*1e-2*1e1
+let Tsub_pd_am = A_H[l=@ave,d=1]*1e2*1e2
+let Tsub_pd_am_ci = A_H_CI[l=@ave,d=1]*1e2*1e2
+let lh_pd_am = lh[l=@ave,d=1]
+let lh_pd_am_ci = lh_ci[l=@ave,d=1]
+let mean_zon_pd_am = DD_ZONAL[l=@ave,d=1]
+let mean_upw_pd_am = DD_VER[l=@ave,d=1]
+let tiw_activity_pd_am = SST_QUADR_DETR[l=@ave,d=7,x=180E:100W@ave,y=5S:5N@ave]
+
+let miua_2x_am = MIUA[d=2,l=@ave]*1e2*1e-1
+let miua_2x_am_ci = MIUA_CI[l=@ave,d=2]*1e2*1e-1
+let beita_u_2x_am = BEITA_U[d=2,l=@ave]*1e1*1e-2
+let beita_u_2x_am_ci = BEITA_U_CI[d=2,l=@ave]*1e1*1e-2
+let zonal_sst_2x_am = ZOSST_GRAD[d=2,l=@ave]*1e9
+let beita_w_2x_am = BEITA_W[d=2,l=@ave]*1e1*1e-2*1e4
+let beita_w_2x_am_ci = BEITA_W_CI[d=2,l=@ave]*1e1*1e-2*1e4
+let thermocl_2x_am = BEITA_H[d=2,l=@ave]*1e-2*1e-2*1e1
+let thermocl_2x_am_ci = BEITA_H_CI[d=2,l=@ave]*1e-2*1e-2*1e1
+let Tsub_2x_am = A_H[l=@ave,d=2]*1e2*1e2
+let Tsub_2x_am_ci = A_H_CI[l=@ave,d=2]*1e2*1e2
+let lh_2x_am = lh[l=@ave,d=2]
+let lh_2x_am_ci = lh_ci[l=@ave,d=2]
+let mean_zon_2x_am = DD_ZONAL[l=@ave,d=2]
+let mean_upw_2x_am = DD_VER[l=@ave,d=2]
+let tiw_activity_2x_am = SST_QUADR_DETR[l=@ave,d=8,x=180E:100W@ave,y=5S:5N@ave]
+
+let miua_4x_am = MIUA[d=3,l=@ave]*1e2*1e-1
+let miua_4x_am_ci = MIUA_CI[l=@ave,d=3]*1e2*1e-1
+let beita_u_4x_am = BEITA_U[d=3,l=@ave]*1e1*1e-2
+let beita_u_4x_am_ci = BEITA_U_CI[d=3,l=@ave]*1e1*1e-2
+let zonal_sst_4x_am = ZOSST_GRAD[d=3,l=@ave]*1e9
+let beita_w_4x_am = BEITA_W[d=3,l=@ave]*1e1*1e-2*1e4
+let beita_w_4x_am_ci = BEITA_W_CI[d=3,l=@ave]*1e1*1e-2*1e4
+let thermocl_4x_am = BEITA_H[d=3,l=@ave]*1e-2*1e-2*1e1
+let thermocl_4x_am_ci = BEITA_H_CI[d=3,l=@ave]*1e-2*1e-2*1e1
+let Tsub_4x_am = A_H[l=@ave,d=3]*1e2*1e2
+let Tsub_4x_am_ci = A_H_CI[l=@ave,d=3]*1e2*1e2
+let lh_4x_am = lh[l=@ave,d=3]
+let lh_4x_am_ci = lh_ci[l=@ave,d=3]
+let mean_zon_4x_am = DD_ZONAL[l=@ave,d=3]
+let mean_upw_4x_am = DD_VER[l=@ave,d=3]
+let tiw_activity_4x_am = SST_QUADR_DETR[l=@ave,d=9,x=180E:100W@ave,y=5S:5N@ave]
+
+let miua_pd = {`miua_pd_am`,0,0}
+let miua_2x = {0,`miua_2x_am`,0}
+let miua_4x = {0,0,`miua_4x_am`}
+
+let beita_u_pd = {`beita_u_pd_am`,0,0}
+let beita_u_2x = {0,`beita_u_2x_am`,0}
+let beita_u_4x = {0,0,`beita_u_4x_am`}
+
+let zonal_sst_pd = {`zonal_sst_pd_am`,0,0}
+let zonal_sst_2x = {0,`zonal_sst_2x_am`,0}
+let zonal_sst_4x = {0,0,`zonal_sst_4x_am`}
+
+let beita_w_pd = {`beita_w_pd_am`,0,0}
+let beita_w_2x = {0,`beita_w_2x_am`,0}
+let beita_w_4x = {0,0,`beita_w_4x_am`}
+
+let thermocl_pd = {`thermocl_pd_am`,0,0}
+let thermocl_2x = {0,`thermocl_2x_am`,0}
+let thermocl_4x = {0,0,`thermocl_4x_am`}
+
+let Tsub_pd = {`Tsub_pd_am`,0,0}
+let Tsub_2x = {0,`Tsub_2x_am`,0}
+let Tsub_4x = {0,0,`Tsub_4x_am`}
+
+let lh_pd = {`lh_pd_am`,0,0}
+let lh_2x = {0,`lh_2x_am`,0}
+let lh_4x = {0,0,`lh_4x_am`}
+
+let mean_cur_pd = {`mean_zon_pd_am`,0,0,0,`mean_upw_pd_am`,0,0}
+let mean_cur_2x = {0,`mean_zon_2x_am`,0,0,0,`mean_upw_2x_am`,0}
+let mean_cur_4x = {0,0,`mean_zon_4x_am`,0,0,0,`mean_upw_4x_am`}
+
+let tiw_activity_pd = {`tiw_activity_pd_am`,0,0}
+let tiw_activity_2x = {0,`tiw_activity_2x_am`,0}
+let tiw_activity_4x = {0,0,`tiw_activity_4x_am`}
+
+SET MODE LINECOLORS:9
+
+PPL COLOR,7,45,45,45 ! grey (PD)
+PPL COLOR,8,60,80,100 ! blue (2x)
+PPL COLOR,9,100,40,10 ! orange (4x)
+
+set wind 1
+define symbol filename=BJ_index2
+if ($print) then
+  set mod meta
+endif
+set wind/asp=0.35
+
+go margins 1 1 1 1
+go bar_chart3.jnl poly/line/fill/nolabel/hlim=0:32:32/vlim=-1.3:2.3:0.5/pal=pd/nokey bj_pd bj_pd
+ppl axset,0,0,,0
+ppl AXLABP,0,
+ppl cross,1,1
+ppl axlsze,,0.16
+ppl YFOR,(i2)
+ppl axatic,0,
+ppl AXNSIG,0,0
+ppl plot/ov
+go bar_chart3.jnl poly/line/fill/nolabel/pal=2x/nokey/ov bj_2x bj_2x
+go bar_chart3.jnl poly/line/fill/nolabel/pal=4x/nokey/ov bj_4x bj_4x
+!GO error_bars poly/line=1/nol bj_pd bj_pd_ci
+!GO error_bars poly/line=1/nol bj_2x bj_2x_ci
+!GO error_bars poly/line=1/nol bj_4x bj_4x_ci
+
+label/nouser 0,3.8,,,.16 @c001(a) ENSO stability 
+label/nouser -0.78,1.3,,90,.16 @c002^oC @c001or yr^-^1
+label/nouser 11.1,3.3,,,.16 @c007PD
+label/nouser 11.1,3.0,,,.16 @c0082xCO_2
+label/nouser 11.1,2.7,,,.16 @c0094xCO_2
+label/nouser 0.22,0.9,,,.16 @c002ENSO ampl.
+label/nouser 1.9,0.9,,,.16 @c001Growth rate
+label/nouser 2.4,0.6,,,.16 @c001(BJ)
+label/nouser 4.157,0.9,,,.16 @c001ZAF
+label/nouser 6.0,0.9,,,.16 @c001TF
+label/nouser 7.75,0.9,,,.16 @c001EF
+label/nouser 9.45,1.5,,,.16 @c001TD
+label/nouser 11.22,1.5,,,.16 @c001DD
+label/nouser 12.848,1.5,,,.16 @c001TIWD
+
+go box 25.0,27.2,1.2,2.3,1
+
+if ($print) then
+  can mod meta
+  sp Fprint -o ($filename).ps -l cps -p portrait metafile.plt
+  sp sed -e "s/3000 div setlinewidth}/600 div setlinewidth}/" ($filename).ps > ($filename).thick.ps
+  sp rm metafile* ($filename).ps
+  sp mv ($filename).thick.ps ($filename).ps
+endif

@@ -1,0 +1,152 @@
+set mem/size=1000
+
+define symbol print=yes
+
+use "/pf/m/m300845/_work_pc/data/obs/reynolds_sst/_oisst-avhrr-v02r01__sst__monthly__UHAM-ICDC.1x1.nc"
+use "../phenomenology/SST.mon.0061-0140.1x1.pd.nc"
+use "/pf/m/m300845/_work_pc/data/cmip6/tos/new/_tos_Omon_ensmean_historical_r1i1p1f1_1x1.trop_pac.catted.nc"
+use "/pf/m/m300845/_work_pc/data/cmip6/tos/new/_tos_Omon_catted_historical_r1i1p1f1_1x1.trop_pac.catted.nc"
+use "/pf/m/m300845/_work_pc/data/obs/GPCP/gpcp_v01r03_daily_alltime_timmean.1x1.nc"
+use PRECT.mon.0061-0140.1x1.nc
+use "/pf/m/m300845/_work_pc/data/cmip6/pr/_pr_Amon_ensmean.1x1.timmean.nc"
+
+!SST
+let sst_reynolds_mean = sst[d=1, l=1:456@ave]-273.15
+let sst_model_mean = sst[d=2, l=1:960@ave]
+let sst_bias = sst_model_mean - sst_reynolds_mean
+let sst_bias_regmsub = sst_bias - sst_bias[x=100E:60W@ave,y=15S:15N@ave]
+
+let sst_cmip6_ensmean = tos[d=3]
+let sst_bias_cmip6_ensmean = sst_cmip6_ensmean[gxy=sst[d=1]] - sst_reynolds_mean
+let sst_bias_cmip6_ensmean_regmsub = sst_bias_cmip6_ensmean - sst_bias_cmip6_ensmean[x=100E:60W@ave,y=15S:15N@ave]
+
+let sst_cmip6 = tos[d=4]
+let sst_bias_cmip6 = sst_cmip6[gxy=sst[d=1]] - sst_reynolds_mean
+let t_cm = sst_bias_cmip6 - sst_bias_cmip6[x=100E:60W@ave,y=15S:15N@ave]
+
+let cold_tongue_index = {`sst_bias_regmsub[x=150E:100W@ave,y=5S:5N@ave]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=1]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=2]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=3]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=4]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=5]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=6]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=7]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=8]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=9]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=10]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=11]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=12]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=13]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=14]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=15]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=16]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=17]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=18]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=19]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=20]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=21]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=22]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=23]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=24]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=25]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=26]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=27]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=28]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=29]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=30]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=31]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=32]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=33]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=34]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=35]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=36]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=37]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=38]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=39]`} 
+
+!let cold_tongue_index_cmip = {`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=1]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=2]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=3]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=4]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=5]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=6]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=7]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=8]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=9]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=10]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=11]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=12]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=13]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=14]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=15]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=16]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=17]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=18]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=19]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=20]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=21]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=22]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=23]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=24]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=25]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=26]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=27]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=28]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=29]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=30]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=31]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=32]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=33]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=34]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=35]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=36]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=37]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=38]`,`t_cm[x=150E:100W@ave,y=5S:5N@ave,l=39]`}
+!let cold_tongue_index_cmip_sorted_index = sorti(cold_tongue_index_cmip)
+!let cold_tongue_index_cmip_sorted = samplei(cold_tongue_index_cmip, cold_tongue_index_cmip_sorted_index)
+
+let cold_tongue_index_sorted_index = sorti(cold_tongue_index)
+let cold_tongue_index_sorted = samplei(cold_tongue_index, cold_tongue_index_sorted_index)
+
+SET MODE LINECOLORS:10
+PPL COLOR,7,40,40,40 ! gray
+PPL COLOR,8,45,45,45 ! grey (PD)
+PPL COLOR,9,60,80,100 ! blue (2x)
+PPL COLOR,10,100,40,10 ! orange (4x)
+
+go new_page.jnl 2 2
+
+set wind 1
+define symbol filename=mean_state_biases
+if ($print) then
+  set mod meta
+endif
+set wind/asp=0.6
+
+set viewp 1
+go margins 0.8 0.6 1 0.6
+fill/nol/nok/pal=blue_darkred_mod.spk/lev=(-inf)(-2.5,2.5,0.5)(inf)/set/hlim=100E:60W/vlim=30S:30N sst_bias_regmsub
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl axset,1,1,1,1
+ppl cross,1
+ppl fill
+!cont/ov/nol/lev=(-18,18,3)del(0)/set pr_bias
+!ppl CONSET 0.16,,,,,,,1
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,4.05,,,0.18 @c011(a) SST bias: UHR-CESM (@c018PD)
+go box 150,260,-5,5,1
+
+set viewp 2
+go margins 0.7 0.7 0.6 1
+fill/nol/pal=blue_darkred_mod.spk/lev=(-inf)(-2.5,2.5,0.5)(inf)/set/hlim=100E:60W/vlim=30S:30N sst_bias_cmip6_ensmean_regmsub
+ppl axlint,2,
+ppl axlsze,0.13,0.13
+ppl shakey ,,0.11,,,,,,,
+ppl axlabp,-1,-1
+ppl cross,1
+ppl fill
+!cont/ov/nol/lev=(-18,18,3)del(0)/set pr_bias_cmip6_ensmean
+!ppl CONSET 0.16,,,,,,,1
+!ppl contour/ov
+go fland
+go land
+label/nouser 0,4.05,,,0.18 @c011(b) CMIP6 ensemble-mean
+label/nouser 7.2,4,,0,0.16 @c001(^oC)
+go box 150,260,-5,5,1
+
+set viewp 3
+go margins 0.6 1.7 1 -7.72
+plot/vs/vlim=-1.25:0.2/hlim=39.5:-0.2:1/set/nol/sym=2/thick {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39},cold_tongue_index_sorted
+ppl axlsze,,0.14
+ppl axlint,1,
+ppl axlabp,0,-1
+ppl axset,0,1,1,1
+ppl cross,1,
+ppl YFOR,(f5.1)
+ppl plot
+plot/ov/vs/nol/sym=2/thick/col=2 {36},cold_tongue_index_sorted[i=37]
+label/nouser 0,3.05,,,0.18 @c011(c) Cold tongue bias index
+label/nouser -0.815,1.1,,90,0.16 @c001^oC
+label/nouser -0.625,-1.25,,50,0.12 @c001MCM-UA-1-0
+label/nouser -0.1,-1.2,,50,0.12 @c001FGOALS-f3-L
+label/nouser 0.55,-0.85,,50,0.12 @c001NorCPM1
+label/nouser 0.8,-1.05,,50,0.12 @c012UHR-CESM
+label/nouser 1.5,-0.7,,50,0.12 @c001CIESM
+label/nouser 1.85,-0.75,,50,0.12 @c001CESM2
+label/nouser 1.95,-1.1,,50,0.12 @c001CESM2-FV2
+label/nouser 2.2,-1.25,,50,0.12 @c001GISS-E2-1-G
+label/nouser 2.4,-1.45,,50,0.12 @c001CMCC-CM2-HR4
+label/nouser 3.0,-1.2,,50,0.12 @c001ACCESS-CM2
+label/nouser 3.7,-0.8,,50,0.12 @c001TaiESM1
+label/nouser 3.84,-1.08,,50,0.12 @c001FGOALS-g3
+label/nouser 4.15,-1.15,,50,0.12 @c001MRI-ESM2-0
+label/nouser 4.50,-1.2,,50,0.12 @c001CAS-ESM2-0
+label/nouser 4.7,-1.45,,50,0.12 @c001MPI-ESM1-2-HR
+label/nouser 4.9,-1.65,,50,0.12 @c001CESM2-WACCM-FV2
+label/nouser 5.6,-1.25,,50,0.12 @c001FIO-ESM-2-0
+label/nouser 5.95,-1.3,,50,0.12 @c001CESM2-WACCM
+label/nouser 6.8,-0.8,,50,0.12 @c001MIROC6
+label/nouser 7.0,-1.0,,50,0.12 @c001GFDL-CM4
+label/nouser 7.25,-1.2,,50,0.12 @c001NorESM2-MM
+label/nouser 7.6,-1.25,,50,0.12 @c001GISS-E2-1-H
+label/nouser 7.8,-1.45,,50,0.12 @c001MPI-ESM1-2-LR
+label/nouser 8.5,-1.05,,50,0.12 @c001GFDL-ESM4
+label/nouser 8.7,-1.3,,50,0.12 @c001CAMS-CSM1-0
+label/nouser 8.95,-1.45,,50,0.12 @c001ACCESS-ESM1-5
+label/nouser 9.7,-1.0,,50,0.12 @c001BCC-ESM1
+label/nouser 9.9,-1.25,,50,0.12 @c001SAM0-UNICON
+label/nouser 10.7,-0.75,,50,0.12 @c001NESM3
+label/nouser 10.75,-1.15,,50,0.12 @c001NorESM2-LM
+label/nouser 11.25,-1.0,,50,0.12 @c001E3SM-1-0
+label/nouser 11.8,-0.85,,50,0.12 @c001CanESM5
+label/nouser 11.5,-1.65,,50,0.12 @c001MPI-ESM-1-2-HAM
+label/nouser 12.1,-1.4,,50,0.12 @c001CMCC-CM2-SR5
+label/nouser 12.55,-1.35,,50,0.12 @c001BCC-CSM2-MR
+label/nouser 13.25,-1.0,,50,0.12 @c001E3SM-1-1
+label/nouser 13.35,-1.3,,50,0.12 @c001IPSL-CM6A-LR
+label/nouser 13.65,-1.40,,50,0.12 @c001E3SM-1-1-ECA
+label/nouser 14.3,-1.1,,50,0.12 @c001INM-CM5-0
+label/nouser 14.7,-1.1,,50,0.12 @c001INM-CM4-8
+
+label/nouser 15.6,2.43,,,0.14 @c001 0.0
+label/nouser 15.6,1.64,,,0.14 @c001-0.4
+label/nouser 15.6,0.832,,,0.14 @c001-0.8
+label/nouser 15.6,0.04,,,0.14 @c001-1.2
+
+if ($print) then
+  can mod meta
+  sp Fprint -o ($filename).ps -l cps -p portrait metafile.plt
+  sp sed -e "s/3000 div setlinewidth}/900 div setlinewidth}/" ($filename).ps > ($filename).thick.ps
+  sp rm metafile* ($filename).ps
+  sp mv ($filename).thick.ps ($filename).ps
+endif
